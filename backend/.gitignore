@@ -1,0 +1,18 @@
+# Database files
+database/*.db
+database/*.sqlite
+database/*.sqlite3
+
+# Environment variables
+.env
+.env.production
+
+# Logs
+logs/
+*.log
+
+# Node modules
+node_modules/
+
+# Cache
+.cache/ 

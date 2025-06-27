@@ -1,0 +1,30 @@
+{
+  "name": "career-evaluation-system",
+  "version": "1.0.0",
+  "description": "A comprehensive career evaluation platform for software engineering teams",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm start --prefix frontend\"",
+    "build": "npm run build --prefix frontend",
+    "start": "npm start --prefix backend",
+    "install-all": "npm install --prefix backend && npm install --prefix frontend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/career-evaluation-system.git"
+  },
+  "keywords": [
+    "career",
+    "evaluation",
+    "radar",
+    "chart",
+    "performance",
+    "assessment",
+    "react",
+    "nodejs"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+} 
