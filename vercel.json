@@ -5,11 +5,12 @@
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "build"
+        "distDir": "frontend/build",
+        "buildCommand": "cd frontend && npm run build"
       }
     },
     {
-      "src": "backend/server.js",
+      "src": "backend/server.js", 
       "use": "@vercel/node",
       "config": {
         "maxDuration": 30

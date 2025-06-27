@@ -33,7 +33,7 @@ const EvaluationPage: React.FC = () => {
         if (userSlug) {
             fetchUserData();
         }
-    }, [userSlug]);
+    }, [userSlug]); // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         if (isLeaderEvaluation) {
