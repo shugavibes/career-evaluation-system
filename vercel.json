@@ -11,12 +11,20 @@
   ],
   "routes": [
     {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
       "src": "/static/(.*)",
       "dest": "/static/$1"
     },
     {
-      "src": "/(.*\\.(js|css|ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|json))",
+      "src": "/(.*\\.(js|css|ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot))",
       "dest": "/$1"
+    },
+    {
+      "src": "/manifest.json",
+      "dest": "/manifest.json"
     },
     {
       "src": "/(.*)",
