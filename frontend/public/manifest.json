@@ -1,0 +1,10 @@
+{
+  "short_name": "Career Eval",
+  "name": "Career Evaluation System",
+  "description": "A comprehensive career evaluation platform for software engineering teams",
+  "icons": [],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#9333ea",
+  "background_color": "#ffffff"
+} 
