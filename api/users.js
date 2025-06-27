@@ -23,29 +23,29 @@ const users = [
     },
     {
         id: 4,
-        name: "Shuga Martínez",
-        slug: "shuga-martinez",
+        name: "Alton Bell",
+        slug: "alton-bell",
         role: "Tech Lead",
         created_at: "2024-01-15T10:00:00Z"
     },
     {
         id: 5,
-        name: "Ana García",  
-        slug: "ana-garcia",
+        name: "Javi Mermet",  
+        slug: "javi-mermet",
         role: "Senior Engineer",
         created_at: "2024-01-15T10:00:00Z"
     },
     {
         id: 6,
-        name: "Carlos López",
-        slug: "carlos-lopez", 
-        role: "Semi-Senior Engineer",
+        name: "Leo Paini",
+        slug: "leo-paini", 
+        role: "Senior Engineer",
         created_at: "2024-01-15T10:00:00Z"
     },
     {
         id: 7,
-        name: "María Rodríguez",
-        slug: "maria-rodriguez",
+        name: "Fede Cano",
+        slug: "fede-cano",
         role: "Tech Lead", 
         created_at: "2024-01-15T10:00:00Z"
     }
