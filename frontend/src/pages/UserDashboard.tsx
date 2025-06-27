@@ -15,7 +15,7 @@ const UserDashboard: React.FC = () => {
         if (userSlug) {
             fetchUserData();
         }
-    }, [userSlug]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [userSlug]);
 
     const fetchUserData = async () => {
         try {

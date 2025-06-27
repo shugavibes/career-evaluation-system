@@ -15,7 +15,7 @@ const ComparisonPage: React.FC = () => {
         if (userSlug) {
             fetchData();
         }
-    }, [userSlug]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [userSlug]);
 
     const fetchData = async () => {
         try {
