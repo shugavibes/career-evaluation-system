@@ -43,13 +43,28 @@ setInterval(() => {
 // API Routes
 
 // Health check
-app.get('/api/health', (req, res) => {
-    res.json({ 
-        status: 'OK', 
-        timestamp: new Date().toISOString(),
-        message: 'Career Evaluation System API is running',
-        database: 'Connected'
-    });
+app.get('/api/health', async (req, res) => {
+    try {
+        // Test database connection
+        await db.all('SELECT 1');
+        res.json({ 
+            status: 'OK', 
+            timestamp: new Date().toISOString(),
+            message: 'Career Evaluation System API is running',
+            database: 'Connected',
+            environment: process.env.NODE_ENV || 'development',
+            port: port
+        });
+    } catch (error) {
+        console.error('Health check failed:', error);
+        res.status(503).json({
+            status: 'ERROR',
+            timestamp: new Date().toISOString(),
+            message: 'Service unavailable',
+            database: 'Failed',
+            error: error.message
+        });
+    }
 });
 
 // Authentication routes
@@ -58,26 +73,37 @@ app.post('/api/auth/logout', auth.logout);
 app.get('/api/auth/me', auth.authenticate, auth.getCurrentUser);
 app.post('/api/auth/change-password', auth.authenticate, auth.changePassword);
 
-// Google OAuth routes
-app.get('/auth/google', passport.authenticate('google', {
-    scope: ['profile', 'email']
-}));
+// Google OAuth routes (only if OAuth is configured)
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+    app.get('/auth/google', passport.authenticate('google', {
+        scope: ['profile', 'email']
+    }));
 
-app.get('/auth/google/callback', 
-    passport.authenticate('google', { failureRedirect: '/login?error=oauth_failed' }),
-    async (req, res) => {
-        try {
-            // Generate JWT token for the user
-            const token = auth.generateToken(req.user);
-            
-            // Redirect to frontend with token
-            res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/callback?token=${token}`);
-        } catch (error) {
-            console.error('OAuth callback error:', error);
-            res.redirect('/login?error=oauth_callback_failed');
+    app.get('/auth/google/callback', 
+        passport.authenticate('google', { failureRedirect: '/login?error=oauth_failed' }),
+        async (req, res) => {
+            try {
+                // Generate JWT token for the user
+                const token = auth.generateToken(req.user);
+                
+                // Redirect to frontend with token
+                res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/callback?token=${token}`);
+            } catch (error) {
+                console.error('OAuth callback error:', error);
+                res.redirect('/login?error=oauth_callback_failed');
+            }
         }
-    }
-);
+    );
+} else {
+    // Provide fallback routes when OAuth is not configured
+    app.get('/auth/google', (req, res) => {
+        res.status(501).json({ error: 'Google OAuth not configured' });
+    });
+    
+    app.get('/auth/google/callback', (req, res) => {
+        res.status(501).json({ error: 'Google OAuth not configured' });
+    });
+}
 
 // Users API with role-based access
 app.get('/api/users', auth.authenticate, auth.requireTeamMemberOrManager, async (req, res) => {
@@ -311,11 +337,41 @@ app.use((req, res) => {
     res.status(404).json({ error: 'Route not found' });
 });
 
-app.listen(port, () => {
-    console.log(`🚀 Local development server running at http://localhost:${port}`);
-    console.log(`📊 API available at http://localhost:${port}/api/*`);
-    console.log(`🔐 Authentication enabled`);
-    console.log(`📋 Role-based access control active`);
+// Initialize database and start server
+async function startServer() {
+    try {
+        console.log('🔄 Initializing database...');
+        // Test database connection
+        await db.all('SELECT 1');
+        console.log('✅ Database connection successful');
+        
+        // Start server
+        app.listen(port, '0.0.0.0', () => {
+            console.log(`🚀 Server running at http://0.0.0.0:${port}`);
+            console.log(`📊 API available at http://0.0.0.0:${port}/api/*`);
+            console.log(`🔐 Authentication enabled`);
+            console.log(`📋 Role-based access control active`);
+            console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+            console.log(`💾 Database: SQLite ready`);
+        });
+    } catch (error) {
+        console.error('❌ Failed to start server:', error);
+        process.exit(1);
+    }
+}
+
+// Handle unhandled rejections
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (error) => {
+    console.error('Uncaught Exception:', error);
+    process.exit(1);
+});
+
+// Start the server
+startServer();
 
 module.exports = app; 

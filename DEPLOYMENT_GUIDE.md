@@ -183,10 +183,37 @@ Your monitoring tools work in production:
    # Check logs for any database initialization errors
    ```
 
-5. **OAuth Not Working**
+5. **Health Check Failures - Service Unavailable**
+   ```bash
+   # This usually means the server isn't starting or responding properly
+   # Common causes and solutions:
+   
+   # 1. Missing environment variables
+   # Make sure these are set in Railway:
+   # - NODE_ENV=production
+   # - SESSION_SECRET=<your-secret>
+   # - JWT_SECRET=<your-secret>
+   
+   # 2. Server startup errors
+   # Check Railway logs for:
+   # - Database connection errors
+   # - Missing dependencies
+   # - Port binding issues
+   
+   # 3. Google OAuth errors (if using OAuth)
+   # OAuth is now optional - server will start without it
+   # Only needed if you want Google login functionality
+   
+   # Test locally:
+   npm start
+   npm run verify  # Runs health check verification
+   ```
+
+6. **OAuth Not Working**
    ```bash
    # Verify Google Cloud Console settings
    # Check callback URLs match your Railway domain
+   # Note: OAuth is optional - app works without it
    ```
 
 ## 🔐 Security Best Practices

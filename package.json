@@ -17,6 +17,7 @@
     "db:monitor": "node scripts/production-monitor.js",
     "db:cleanup": "node scripts/cleanup-duplicates.js",
     "db:query": "sqlite3 database/career-evaluation.db",
+    "verify": "node scripts/verify-startup.js",
     "deploy:railway": "railway deploy",
     "deploy:docker": "docker build -t career-evaluation . && docker run -p 3001:3001 career-evaluation",
     "generate:secrets": "node -e \"console.log('SESSION_SECRET=' + require('crypto').randomBytes(32).toString('hex')); console.log('JWT_SECRET=' + require('crypto').randomBytes(32).toString('hex'));\""
