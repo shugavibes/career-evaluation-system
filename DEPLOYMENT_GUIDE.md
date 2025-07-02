@@ -146,15 +146,15 @@ Your monitoring tools work in production:
 
 ### **Common Issues & Solutions**
 
-1. **Build Fails - Exit Code 127**
+1. **Build Fails - Exit Code 127 or Missing Modules**
    ```bash
-   # This usually means frontend dependencies are corrupted
+   # This usually means frontend dependencies are corrupted or missing
    # Solution: We now use a clean build script that forces fresh installs
    
    # The build process now:
    # 1. Installs backend dependencies
    # 2. Removes corrupted frontend dependencies
-   # 3. Fresh install of frontend dependencies
+   # 3. Fresh install of frontend dependencies (including Tailwind)
    # 4. Builds React app
    
    # Test build locally:
@@ -164,19 +164,26 @@ Your monitoring tools work in production:
    npm run build
    ```
 
-2. **Environment Variables**
+2. **Missing @tailwindcss/forms or other Tailwind plugins**
+   ```bash
+   # Fixed: Moved Tailwind dependencies from devDependencies to dependencies
+   # Tailwind plugins are now installed as regular dependencies
+   # This ensures they're available during production builds
+   ```
+
+3. **Environment Variables**
    ```bash
    # Make sure all required variables are set in Railway
    # Check the Variables tab in your Railway project
    ```
 
-3. **Database Issues**
+4. **Database Issues**
    ```bash
    # SQLite will be created automatically
    # Check logs for any database initialization errors
    ```
 
-4. **OAuth Not Working**
+5. **OAuth Not Working**
    ```bash
    # Verify Google Cloud Console settings
    # Check callback URLs match your Railway domain
