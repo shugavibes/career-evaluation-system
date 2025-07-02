@@ -42,27 +42,67 @@ setInterval(() => {
 
 // API Routes
 
+// Root health check for Railway
+app.get('/', (req, res) => {
+    res.json({
+        status: 'OK',
+        message: 'Career Evaluation System is running',
+        timestamp: new Date().toISOString(),
+        health: '/api/health'
+    });
+});
+
 // Health check
 app.get('/api/health', async (req, res) => {
+    const startTime = Date.now();
+    
     try {
-        // Test database connection
-        await db.all('SELECT 1');
-        res.json({ 
+        // Set response headers for better debugging
+        res.setHeader('X-Health-Check', 'true');
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        
+        // Test database connection with timeout
+        const dbTest = await Promise.race([
+            db.all('SELECT 1'),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Database timeout')), 5000))
+        ]);
+        
+        const responseTime = Date.now() - startTime;
+        
+        res.status(200).json({ 
             status: 'OK', 
             timestamp: new Date().toISOString(),
             message: 'Career Evaluation System API is running',
             database: 'Connected',
             environment: process.env.NODE_ENV || 'development',
-            port: port
+            port: port,
+            uptime: process.uptime(),
+            memory: process.memoryUsage(),
+            responseTime: `${responseTime}ms`,
+            version: '1.0.0',
+            nodejs: process.version,
+            platform: process.platform,
+            arch: process.arch
         });
     } catch (error) {
         console.error('Health check failed:', error);
+        
+        const responseTime = Date.now() - startTime;
+        
         res.status(503).json({
             status: 'ERROR',
             timestamp: new Date().toISOString(),
             message: 'Service unavailable',
             database: 'Failed',
-            error: error.message
+            error: error.message,
+            environment: process.env.NODE_ENV || 'development',
+            port: port,
+            uptime: process.uptime(),
+            responseTime: `${responseTime}ms`,
+            details: {
+                stack: error.stack,
+                code: error.code
+            }
         });
     }
 });
@@ -341,21 +381,62 @@ app.use((req, res) => {
 async function startServer() {
     try {
         console.log('🔄 Initializing database...');
-        // Test database connection
-        await db.all('SELECT 1');
+        
+        // Log environment details
+        console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+        console.log(`📋 Port: ${port}`);
+        console.log(`🗃️  Database path: ${process.env.DATABASE_URL || 'database/career-evaluation.db'}`);
+        
+        // Test database connection with timeout
+        const dbTest = await Promise.race([
+            db.all('SELECT 1'),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('Database connection timeout')), 10000))
+        ]);
+        
         console.log('✅ Database connection successful');
         
-        // Start server
-        app.listen(port, '0.0.0.0', () => {
+        // Check Google OAuth configuration
+        if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+            console.log('🔐 Google OAuth enabled');
+        } else {
+            console.log('⚠️  Google OAuth not configured (missing GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET)');
+        }
+        
+        // Start server with better error handling
+        const server = app.listen(port, '0.0.0.0', () => {
             console.log(`🚀 Server running at http://0.0.0.0:${port}`);
             console.log(`📊 API available at http://0.0.0.0:${port}/api/*`);
             console.log(`🔐 Authentication enabled`);
             console.log(`📋 Role-based access control active`);
-            console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
             console.log(`💾 Database: SQLite ready`);
+            console.log(`✅ Server startup complete`);
         });
+        
+        // Handle server errors
+        server.on('error', (error) => {
+            console.error('❌ Server error:', error);
+            if (error.code === 'EADDRINUSE') {
+                console.error(`Port ${port} is already in use`);
+                process.exit(1);
+            }
+        });
+        
+        // Graceful shutdown
+        process.on('SIGTERM', () => {
+            console.log('🛑 Received SIGTERM, shutting down gracefully...');
+            server.close(() => {
+                console.log('✅ Server closed');
+                process.exit(0);
+            });
+        });
+        
     } catch (error) {
         console.error('❌ Failed to start server:', error);
+        console.error('Error details:', {
+            message: error.message,
+            stack: error.stack,
+            code: error.code
+        });
         process.exit(1);
     }
 }
