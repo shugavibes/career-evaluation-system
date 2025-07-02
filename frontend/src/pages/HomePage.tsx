@@ -15,7 +15,8 @@ const HomePage: React.FC = () => {
     const fetchUsers = async () => {
         try {
             const response = await axios.get('/api/users');
-            setUsers(response.data);
+            const sortedUsers = sortUsersByRole(response.data);
+            setUsers(sortedUsers);
             setError(null);
         } catch (err) {
             setError('Failed to load team members');
@@ -23,6 +24,28 @@ const HomePage: React.FC = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    const sortUsersByRole = (users: User[]) => {
+        const roleOrder = {
+            'tech lead': 1,
+            'senior engineer': 2,
+            'semi-senior engineer': 3,
+            'junior engineer': 4
+        };
+
+        return users.sort((a, b) => {
+            const roleA = roleOrder[a.position.toLowerCase() as keyof typeof roleOrder] || 999;
+            const roleB = roleOrder[b.position.toLowerCase() as keyof typeof roleOrder] || 999;
+            
+            // Primary sort by position hierarchy
+            if (roleA !== roleB) {
+                return roleA - roleB;
+            }
+            
+            // Secondary sort by name alphabetically within same position
+            return a.name.localeCompare(b.name);
+        });
     };
 
     const getRoleColor = (role: string) => {
@@ -112,9 +135,9 @@ const HomePage: React.FC = () => {
                                     <div className="flex-1">
                                         <h3 className="font-semibold text-gray-900 text-lg">{user.name}</h3>
                                         <div className="flex items-center space-x-2 mt-1">
-                                            <span className="text-lg">{getRoleIcon(user.role)}</span>
-                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getRoleColor(user.role)}`}>
-                                                {user.role}
+                                            <span className="text-lg">{getRoleIcon(user.position)}</span>
+                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getRoleColor(user.position)}`}>
+                                                {user.position}
                                             </span>
                                         </div>
                                     </div>

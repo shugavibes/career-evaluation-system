@@ -118,11 +118,11 @@ const EvaluationPage: React.FC = () => {
 
             const payload = {
                 user_id: user.id,
-                evaluator_type: isLeaderEvaluation ? 'leader' : 'self',
+                evaluator_type: isLeaderEvaluation ? 'manager' : 'self',
                 ...data
             };
 
-            await axios.post('/api/evaluations', payload, { headers });
+            await axios.post(`/api/evaluations/${user.slug}`, payload, { headers });
             
             if (isSubmission) {
                 showToast('success', 'Evaluation submitted successfully!');
@@ -215,7 +215,7 @@ const EvaluationPage: React.FC = () => {
                 <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                     <EvaluationForm
                         user={user}
-                        evaluatorType={isLeaderEvaluation ? 'leader' : 'self'}
+                        evaluatorType={isLeaderEvaluation ? 'manager' : 'self'}
                         initialData={initialData || undefined}
                         onSubmit={handleSubmit}
                         onSave={handleSave}

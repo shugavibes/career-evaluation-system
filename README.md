@@ -6,6 +6,9 @@ A comprehensive career evaluation platform for software engineering teams, featu
 
 - **Self-Evaluation**: Assess your skills across 7 key criteria
 - **Leader Assessment**: Get evaluated by your team lead or manager
+- **Google OAuth Integration**: Sign in with Google alongside traditional authentication
+- **Role-based Access Control**: Manager and team member permissions
+- **Inline Expectations Editing**: Managers can edit team member expectations directly
 - **Radar Charts**: Interactive visualizations using Recharts
 - **Gap Analysis**: Compare self and leader evaluations
 - **Export Functionality**: Download comparison results as CSV
@@ -16,10 +19,11 @@ A comprehensive career evaluation platform for software engineering teams, featu
 
 - **Frontend**: React 18 + TypeScript
 - **Backend**: Node.js + Express
-- **Database**: SQLite
+- **Database**: SQLite with automatic schema migration
+- **Authentication**: JWT + Passport.js (Google OAuth 2.0)
 - **Styling**: Tailwind CSS
 - **Charts**: Recharts
-- **State Management**: Zustand
+- **Session Management**: Express Sessions
 - **Routing**: React Router
 
 ## Quick Start
@@ -66,18 +70,36 @@ A comprehensive career evaluation platform for software engineering teams, featu
    npm run init-db
    ```
 
-6. **Start the Application**
+6. **Configure Google OAuth (Optional)**
    
-   **Backend** (Terminal 1):
+   For Google OAuth integration, see detailed setup in [GOOGLE_OAUTH_SETUP.md](./GOOGLE_OAUTH_SETUP.md)
+   
+   Quick setup:
    ```bash
-   cd backend
-   npm start
+   # Copy environment template
+   cp environment.example .env
+   
+   # Add your Google OAuth credentials to .env:
+   # GOOGLE_CLIENT_ID=your-google-client-id
+   # GOOGLE_CLIENT_SECRET=your-google-client-secret
+   # REACT_APP_GOOGLE_CLIENT_ID=your-google-client-id
+   ```
+
+7. **Start the Application**
+   
+   **Development mode** (runs both backend and frontend):
+   ```bash
+   npm run dev
+   ```
+   
+   **Or manually** (Terminal 1):
+   ```bash
+   node server-db.js
    ```
    
    **Frontend** (Terminal 2):
    ```bash
-   cd frontend
-   npm start
+   cd frontend && npm start
    ```
 
 The application will be available at:
@@ -166,9 +188,22 @@ The system comes pre-configured with these team members:
 - **Santi Musso** - Junior Engineer
 - **Javi Mermet** - Senior Engineer
 
-## Leader Authentication
+## Authentication
 
-Leader evaluations require a simple password (default: `leader123`). You can change this by updating the `LEADER_PASSWORD` environment variable in the backend.
+The system supports multiple authentication methods:
+
+### Traditional Login
+- **Manager**: `manager@company.com` / `manager123`
+- **Team Members**: `[name]@company.com` / `password123`
+
+### Google OAuth
+- Click "Continue with Google" on the login page
+- New users are automatically created with `team_member` role
+- Existing users with matching emails are automatically linked
+
+### Role-based Access
+- **Managers**: Full access to all team data and expectations editing
+- **Team Members**: Access to personal dashboard and evaluations
 
 ## Development
 

@@ -1,7 +1,7 @@
 // In-memory database for demo purposes
 let evaluations = [];
 
-module.exports = (req, res) => {
+export default function handler(req, res) {
     // Enable CORS
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -20,16 +20,16 @@ module.exports = (req, res) => {
         
         // Get latest evaluations
         const latestSelf = userEvaluations
-            .filter(e => e.evaluation_type === 'self')
+            .filter(e => e.evaluator_type === 'self')
             .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0];
         
-        const latestLeader = userEvaluations
-            .filter(e => e.evaluation_type === 'leader')
+        const latestManager = userEvaluations
+            .filter(e => e.evaluator_type === 'manager')
             .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0];
 
         return res.json({
             self: latestSelf || null,
-            leader: latestLeader || null
+            manager: latestManager || null
         });
     }
 

@@ -9,7 +9,7 @@ interface ComparisonViewProps {
 }
 
 const ComparisonView: React.FC<ComparisonViewProps> = ({ data, userName }) => {
-    const { self, leader } = data;
+    const { self, manager } = data;
 
     // Prepare radar chart data
     const radarData: RadarChartData[] = [];
@@ -27,16 +27,16 @@ const ComparisonView: React.FC<ComparisonViewProps> = ({ data, userName }) => {
         });
     }
 
-    if (leader) {
+    if (manager) {
         radarData.push({
             name: 'Leader Evaluation',
-            technical_knowledge: leader.technical_knowledge,
-            system_design: leader.system_design,
-            problem_solving: leader.problem_solving,
-            code_quality: leader.code_quality,
-            collaboration: leader.collaboration,
-            technical_leadership: leader.technical_leadership,
-            impact_scope: leader.impact_scope,
+            technical_knowledge: manager.technical_knowledge,
+            system_design: manager.system_design,
+            problem_solving: manager.problem_solving,
+            code_quality: manager.code_quality,
+            collaboration: manager.collaboration,
+            technical_leadership: manager.technical_leadership,
+            impact_scope: manager.impact_scope,
         });
     }
 
@@ -56,19 +56,19 @@ const ComparisonView: React.FC<ComparisonViewProps> = ({ data, userName }) => {
     };
 
     const selfAverage = self ? calculateAverage(self) : 'N/A';
-    const leaderAverage = leader ? calculateAverage(leader) : 'N/A';
+    const leaderAverage = manager ? calculateAverage(manager) : 'N/A';
 
     // Prepare comparison data
     const comparisonRows = Object.entries(criteriaLabels).map(([key, label]) => {
         const selfValue = self?.[key as keyof typeof criteriaLabels] || 0;
-        const leaderValue = leader?.[key as keyof typeof criteriaLabels] || 0;
+        const leaderValue = manager?.[key as keyof typeof criteriaLabels] || 0;
         const gap = Math.abs(selfValue - leaderValue);
         const hasSignificantGap = gap > 1;
 
         return {
             criterion: label,
             self: selfValue,
-            leader: leaderValue,
+            manager: leaderValue,
             gap,
             hasSignificantGap,
         };
@@ -77,8 +77,8 @@ const ComparisonView: React.FC<ComparisonViewProps> = ({ data, userName }) => {
     const exportData = () => {
         // Simple CSV export
         const csvData = [
-            ['Criterion', 'Self-Evaluation', 'Leader Evaluation', 'Gap'],
-            ...comparisonRows.map(row => [row.criterion, row.self, row.leader, row.gap])
+                    ['Criterion', 'Self-Evaluation', 'Leader Evaluation', 'Gap'],
+        ...comparisonRows.map(row => [row.criterion, row.self, row.manager, row.gap])
         ];
         
         const csvString = csvData.map(row => row.join(',')).join('\n');
@@ -91,7 +91,7 @@ const ComparisonView: React.FC<ComparisonViewProps> = ({ data, userName }) => {
         URL.revokeObjectURL(url);
     };
 
-    if (!self && !leader) {
+    if (!self && !manager) {
         return (
             <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-lg p-8">
                 <div className="text-center py-12">
@@ -184,7 +184,7 @@ const ComparisonView: React.FC<ComparisonViewProps> = ({ data, userName }) => {
                                         </td>
                                         <td className="py-3 text-center">
                                             <span className="inline-flex items-center justify-center w-8 h-8 bg-blue-100 text-blue-600 rounded-full font-semibold">
-                                                {row.leader}
+                                                {row.manager}
                                             </span>
                                         </td>
                                         <td className="py-3 text-center">

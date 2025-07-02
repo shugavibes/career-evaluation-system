@@ -4,7 +4,7 @@ import { EvaluationData, User } from '../types/types';
 
 interface EvaluationFormProps {
     user: User;
-    evaluatorType: 'self' | 'leader';
+    evaluatorType: 'self' | 'manager';
     initialData?: EvaluationData;
     onSubmit: (data: EvaluationData) => void;
     onSave?: (data: EvaluationData) => void;

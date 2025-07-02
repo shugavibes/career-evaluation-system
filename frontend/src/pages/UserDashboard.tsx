@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { User, ComparisonData } from '../types/types';
 import RadarChart from '../components/RadarChart';
+import Expectations from '../components/Expectations';
 import axios from 'axios';
 
 const UserDashboard: React.FC = () => {
@@ -22,7 +23,7 @@ const UserDashboard: React.FC = () => {
             setLoading(true);
             const [userResponse, evaluationResponse] = await Promise.all([
                 axios.get(`/api/users/${userSlug}`),
-                axios.get(`/api/evaluations/${userSlug}/latest`).catch(() => ({ data: { self: null, leader: null } }))
+                axios.get(`/api/evaluations/${userSlug}/latest`).catch(() => ({ data: { self: null, manager: null } }))
             ]);
             
             setUser(userResponse.data);
@@ -77,7 +78,7 @@ const UserDashboard: React.FC = () => {
         );
     }
 
-    const hasEvaluations = evaluationData?.self || evaluationData?.leader;
+            const hasEvaluations = evaluationData?.self || evaluationData?.manager;
     const radarData = [];
     
     if (evaluationData?.self) {
@@ -93,16 +94,16 @@ const UserDashboard: React.FC = () => {
         });
     }
 
-    if (evaluationData?.leader) {
+    if (evaluationData?.manager) {
         radarData.push({
             name: 'Leader Evaluation',
-            technical_knowledge: evaluationData.leader.technical_knowledge,
-            system_design: evaluationData.leader.system_design,
-            problem_solving: evaluationData.leader.problem_solving,
-            code_quality: evaluationData.leader.code_quality,
-            collaboration: evaluationData.leader.collaboration,
-            technical_leadership: evaluationData.leader.technical_leadership,
-            impact_scope: evaluationData.leader.impact_scope,
+            technical_knowledge: evaluationData.manager.technical_knowledge,
+            system_design: evaluationData.manager.system_design,
+            problem_solving: evaluationData.manager.problem_solving,
+            code_quality: evaluationData.manager.code_quality,
+            collaboration: evaluationData.manager.collaboration,
+            technical_leadership: evaluationData.manager.technical_leadership,
+            impact_scope: evaluationData.manager.impact_scope,
         });
     }
 
@@ -118,8 +119,8 @@ const UserDashboard: React.FC = () => {
                         <div>
                             <h1 className="text-3xl font-bold text-gray-900">{user.name}</h1>
                             <div className="flex items-center space-x-2 mt-2">
-                                <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${getRoleColor(user.role)}`}>
-                                    {user.role}
+                                <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${getRoleColor(user.position)}`}>
+                                    {user.position}
                                 </span>
                                 <span className="text-gray-500">•</span>
                                 <span className="text-gray-600">
@@ -156,7 +157,7 @@ const UserDashboard: React.FC = () => {
                             <div>
                                 <h3 className="font-semibold text-gray-900">Leader Evaluate</h3>
                                 <p className="text-sm text-gray-600">
-                                    {evaluationData?.leader ? 'Update leader evaluation' : 'Get evaluated by leader'}
+                                    {evaluationData?.manager ? 'Update leader evaluation' : 'Get evaluated by leader'}
                                 </p>
                             </div>
                         </div>
@@ -192,7 +193,7 @@ const UserDashboard: React.FC = () => {
                 </div>
 
                 {/* Evaluation Status & Chart */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
                     {/* Status Cards */}
                     <div className="space-y-4">
                         <h2 className="text-xl font-semibold text-gray-900">Evaluation Status</h2>
@@ -223,14 +224,14 @@ const UserDashboard: React.FC = () => {
                             <div className="flex items-center justify-between mb-2">
                                 <h3 className="font-medium text-gray-900">Leader Evaluation</h3>
                                 <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                                    evaluationData?.leader ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                                    evaluationData?.manager ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
                                 }`}>
-                                    {evaluationData?.leader ? 'Complete' : 'Pending'}
+                                    {evaluationData?.manager ? 'Complete' : 'Pending'}
                                 </span>
                             </div>
-                            {evaluationData?.leader ? (
+                            {evaluationData?.manager ? (
                                 <p className="text-sm text-gray-600">
-                                    Last updated: {new Date(evaluationData.leader.updated_at).toLocaleDateString()}
+                                    Last updated: {new Date(evaluationData.manager.updated_at).toLocaleDateString()}
                                 </p>
                             ) : (
                                 <p className="text-sm text-gray-600">
@@ -246,7 +247,7 @@ const UserDashboard: React.FC = () => {
                                 {!evaluationData?.self && (
                                     <li>• Complete your self-evaluation</li>
                                 )}
-                                {!evaluationData?.leader && (
+                                {!evaluationData?.manager && (
                                     <li>• Request leader evaluation</li>
                                 )}
                                 {hasEvaluations && (
@@ -283,6 +284,33 @@ const UserDashboard: React.FC = () => {
                             </div>
                         )}
                     </div>
+                </div>
+
+                {/* Expectations Section */}
+                <div className="mb-8">
+                    <Expectations 
+                        expectations={user.expectations || {
+                            actions: {
+                                technical_knowledge: [],
+                                system_design: [],
+                                problem_solving: [],
+                                impact_scope: []
+                            },
+                            leadership: [],
+                            competencies: {
+                                ownership: [],
+                                quality: [],
+                                honesty: [],
+                                kindness: []
+                            },
+                            results: []
+                        }} 
+                        userName={user.name} 
+                        userSlug={user.slug}
+                        onExpectationsUpdate={(newExpectations) => {
+                            setUser(prev => prev ? { ...prev, expectations: newExpectations } : null);
+                        }}
+                    />
                 </div>
             </div>
         </div>

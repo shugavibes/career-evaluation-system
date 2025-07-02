@@ -62,7 +62,7 @@ const ComparisonPage: React.FC = () => {
         );
     }
 
-    if (!comparisonData?.self && !comparisonData?.leader) {
+    if (!comparisonData?.self && !comparisonData?.manager) {
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div className="text-center">

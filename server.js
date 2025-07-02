@@ -1,4 +1,13 @@
-// In-memory database for demo purposes (since SQLite doesn't work well in Vercel serverless)
+const express = require('express');
+const cors = require('cors');
+const app = express();
+const port = 3001;
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// In-memory database for demo purposes
 const users = [
     {
         id: 1,
@@ -443,32 +452,87 @@ const users = [
     }
 ];
 
-export default function handler(req, res) {
-    // Enable CORS
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+let evaluations = [];
 
-    if (req.method === 'OPTIONS') {
-        res.status(200).end();
-        return;
+// API Routes
+app.get('/api/health', (req, res) => {
+    res.json({ 
+        status: 'OK', 
+        timestamp: new Date().toISOString(),
+        message: 'Career Evaluation System API is running'
+    });
+});
+
+app.get('/api/hello', (req, res) => {
+    res.json({ message: 'Hello from local development server!' });
+});
+
+// Users API
+app.get('/api/users', (req, res) => {
+    res.json(users);
+});
+
+app.get('/api/users/:slug', (req, res) => {
+    const { slug } = req.params;
+    const user = users.find(u => u.slug === slug);
+    if (!user) {
+        return res.status(404).json({ error: 'User not found' });
     }
+    res.json(user);
+});
 
-    if (req.method === 'GET') {
-        // Get specific user by slug from query parameter
-        const { slug } = req.query;
-        
-        if (slug) {
-            const user = users.find(u => u.slug === slug);
-            if (!user) {
-                return res.status(404).json({ error: 'User not found' });
-            }
-            return res.json(user);
-        }
-        
-        // Get all users
-        return res.json(users);
-    }
+// Evaluations API
+app.get('/api/evaluations', (req, res) => {
+    res.json(evaluations);
+});
 
-    res.status(405).json({ error: 'Method not allowed' });
-} 
+app.get('/api/evaluations/:slug', (req, res) => {
+    const { slug } = req.params;
+    const userEvaluations = evaluations.filter(e => e.user_slug === slug);
+    res.json(userEvaluations.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)));
+});
+
+app.get('/api/evaluations/:slug/latest', (req, res) => {
+    const { slug } = req.params;
+    const userEvaluations = evaluations.filter(e => e.user_slug === slug);
+    
+    const latestSelf = userEvaluations
+        .filter(e => e.evaluator_type === 'self')
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0];
+    
+    const latestManager = userEvaluations
+        .filter(e => e.evaluator_type === 'manager')
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0];
+
+    res.json({
+        self: latestSelf || null,
+        manager: latestManager || null
+    });
+});
+
+app.get('/api/evaluations/:slug/history', (req, res) => {
+    const { slug } = req.params;
+    const userEvaluations = evaluations.filter(e => e.user_slug === slug);
+    res.json(userEvaluations.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)));
+});
+
+app.post('/api/evaluations/:slug', (req, res) => {
+    const { slug } = req.params;
+    const evaluation = {
+        id: evaluations.length + 1,
+        user_slug: slug,
+        ...req.body,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+    };
+    
+    evaluations.push(evaluation);
+    res.status(201).json(evaluation);
+});
+
+app.listen(port, () => {
+    console.log(`🚀 Local development server running at http://localhost:${port}`);
+    console.log(`📊 API available at http://localhost:${port}/api/*`);
+});
+
+module.exports = app; 

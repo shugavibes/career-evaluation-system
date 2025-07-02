@@ -2,14 +2,57 @@ export interface User {
     id: number;
     name: string;
     slug: string;
-    role: string;
+    email: string;
+    role: 'team_member' | 'manager';
+    position: string;
     created_at: string;
+    expectations?: UserExpectations;
+}
+
+export interface AuthUser extends User {
+    token?: string;
+}
+
+export interface LoginCredentials {
+    email: string;
+    password: string;
+}
+
+export interface AuthContextType {
+    user: AuthUser | null;
+    login: (credentials: LoginCredentials) => Promise<void>;
+    logout: () => void;
+    loading: boolean;
+    error: string | null;
+}
+
+export interface ProtectedRouteProps {
+    children: React.ReactNode;
+    requireRole?: 'manager' | 'team_member';
+    requireSelfOrManager?: boolean;
+}
+
+export interface UserExpectations {
+    actions: {
+        technical_knowledge: string[];
+        system_design: string[];
+        problem_solving: string[];
+        impact_scope: string[];
+    };
+    leadership: string[];
+    competencies: {
+        ownership: string[];
+        quality: string[];
+        honesty: string[];
+        kindness: string[];
+    };
+    results: string[];
 }
 
 export interface Evaluation {
     id: number;
     user_id: number;
-    evaluator_type: 'self' | 'leader';
+    evaluator_type: 'self' | 'manager';
     technical_knowledge: number;
     system_design: number;
     problem_solving: number;
@@ -49,7 +92,7 @@ export interface EvaluationData {
 
 export interface ComparisonData {
     self: Evaluation | null;
-    leader: Evaluation | null;
+    manager: Evaluation | null;
 }
 
 export interface RadarChartData {
