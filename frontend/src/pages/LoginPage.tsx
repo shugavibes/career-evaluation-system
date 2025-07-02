@@ -69,7 +69,7 @@ const LoginPage: React.FC = () => {
     const fillManagerCredentials = () => {
         setCredentials({
             email: 'manager@company.com',
-            password: 'manager123'
+            password: 'admin123'
         });
     };
 
