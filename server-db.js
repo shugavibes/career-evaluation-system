@@ -52,8 +52,24 @@ app.get('/', (req, res) => {
     });
 });
 
-// Health check
-app.get('/api/health', async (req, res) => {
+// Health check - simplified for Railway deployment
+app.get('/api/health', (req, res) => {
+    res.setHeader('X-Health-Check', 'true');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    
+    res.status(200).json({ 
+        status: 'OK', 
+        timestamp: new Date().toISOString(),
+        message: 'Career Evaluation System API is running',
+        environment: process.env.NODE_ENV || 'development',
+        port: port,
+        uptime: process.uptime(),
+        version: '1.0.0'
+    });
+});
+
+// Detailed health check with database - for manual testing
+app.get('/api/health/detailed', async (req, res) => {
     const startTime = Date.now();
     
     try {
