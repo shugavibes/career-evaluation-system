@@ -7,14 +7,38 @@
       "config": {
         "distDir": "frontend/build"
       }
+    },
+    {
+      "src": "server-supabase.js",
+      "use": "@vercel/node"
     }
   ],
   "functions": {
-    "api/*.js": {
+    "server-supabase.js": {
       "runtime": "nodejs18.x"
     }
   },
   "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/server-supabase.js"
+    },
+    {
+      "src": "/auth/(.*)",
+      "dest": "/server-supabase.js"
+    },
+    {
+      "src": "/health",
+      "dest": "/server-supabase.js"
+    },
+    {
+      "src": "/ping",
+      "dest": "/server-supabase.js"
+    },
+    {
+      "src": "/status",
+      "dest": "/server-supabase.js"
+    },
     {
       "src": "/static/(.*)",
       "dest": "/frontend/build/static/$1"

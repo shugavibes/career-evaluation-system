@@ -12,6 +12,7 @@
     "dev-sqlite": "concurrently \"node server-db.js\" \"cd frontend && npm start\"",
     "dev-old": "concurrently \"node server.js\" \"cd frontend && npm start\"",
     "build": "./build.sh",
+    "vercel-build": "cd frontend && npm ci && npm run build",
     "start": "node server-supabase.js",
     "start-sqlite": "node server-db.js",
     "init-db": "node scripts/init-database.js",

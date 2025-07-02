@@ -73,8 +73,8 @@ In Vercel project settings, add these environment variables:
 **Required Variables:**
 ```
 NODE_ENV=production
-SUPABASE_URL=https://your-project-ref.supabase.co
-SUPABASE_ANON_KEY=eyJhbGci...your-actual-anon-key
+SUPABASE_URL=https://vdjsxytvgtakxileytbz.supabase.co
+SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZkanN4eXR2Z3Rha3hpbGV5dGJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE0ODYxMzEsImV4cCI6MjA2NzA2MjEzMX0.4qqaGgOY_i1DdxgGEICi-VDpdGdplJ7e2o1Ssn3hboo
 SESSION_SECRET=6a219a1996851292921587c759568aca1040d7544f2db765d5227db20b0a325f
 JWT_SECRET=25ac91c107316d758036d007577972a786befa16206c9de9ffc06779bba7cd1b
 ```
