@@ -10,14 +10,12 @@
     },
     {
       "src": "server-supabase.js",
-      "use": "@vercel/node"
+      "use": "@vercel/node",
+      "config": {
+        "maxLambdaSize": "50mb"
+      }
     }
   ],
-  "functions": {
-    "server-supabase.js": {
-      "runtime": "nodejs18.x"
-    }
-  },
   "routes": [
     {
       "src": "/api/(.*)",
@@ -28,15 +26,7 @@
       "dest": "/server-supabase.js"
     },
     {
-      "src": "/health",
-      "dest": "/server-supabase.js"
-    },
-    {
-      "src": "/ping",
-      "dest": "/server-supabase.js"
-    },
-    {
-      "src": "/status",
+      "src": "/(health|ping|status)",
       "dest": "/server-supabase.js"
     },
     {
@@ -44,19 +34,12 @@
       "dest": "/frontend/build/static/$1"
     },
     {
-      "src": "/(.*\\.(js|css|ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot))",
+      "src": "/(.*\\.(js|css|ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|json))",
       "dest": "/frontend/build/$1"
-    },
-    {
-      "src": "/manifest.json",
-      "dest": "/frontend/build/manifest.json"
     },
     {
       "src": "/(.*)",
       "dest": "/frontend/build/index.html"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 } 
