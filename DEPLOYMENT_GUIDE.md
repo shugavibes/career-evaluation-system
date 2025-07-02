@@ -18,8 +18,8 @@ Create these environment variables in Railway:
 ```bash
 # Required for Production
 NODE_ENV=production
-SESSION_SECRET=your-super-secure-session-secret-here
-JWT_SECRET=your-jwt-secret-key-here
+SESSION_SECRET=6a219a1996851292921587c759568aca1040d7544f2db765d5227db20b0a325f
+JWT_SECRET=25ac91c107316d758036d007577972a786befa16206c9de9ffc06779bba7cd1b
 
 # Google OAuth (if using OAuth)
 GOOGLE_CLIENT_ID=your-google-client-id
@@ -148,13 +148,19 @@ Your monitoring tools work in production:
 
 1. **Build Fails - Exit Code 127**
    ```bash
-   # This usually means frontend dependencies aren't installed
-   # Solution: The updated package.json includes a postinstall script
-   # If still failing, check that both package.json files exist:
-   ls -la package.json frontend/package.json
+   # This usually means frontend dependencies are corrupted
+   # Solution: We now use a clean build script that forces fresh installs
+   
+   # The build process now:
+   # 1. Installs backend dependencies
+   # 2. Removes corrupted frontend dependencies
+   # 3. Fresh install of frontend dependencies
+   # 4. Builds React app
    
    # Test build locally:
-   npm install
+   ./build.sh
+   
+   # Or using npm:
    npm run build
    ```
 

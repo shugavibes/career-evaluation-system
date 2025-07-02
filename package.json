@@ -10,8 +10,7 @@
   "scripts": {
     "dev": "concurrently \"node server-db.js\" \"cd frontend && npm start\"",
     "dev-old": "concurrently \"node server.js\" \"cd frontend && npm start\"",
-    "build": "cd frontend && npm ci && npm run build",
-    "postinstall": "cd frontend && npm ci",
+    "build": "./build.sh",
     "start": "node server-db.js",
     "init-db": "node scripts/init-database.js",
     "db:validate": "node scripts/validate-database.js",
