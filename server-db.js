@@ -11,6 +11,15 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 3001;
 
+// Log startup information for Railway
+console.log('🚀 Starting Career Evaluation System...');
+console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+console.log(`📋 Port: ${port}`);
+console.log(`🗃️  Database path: ${process.env.DATABASE_URL || 'database/career-evaluation.db'}`);
+
+// Trust proxy for Railway
+app.set('trust proxy', 1);
+
 // Security middleware
 app.use(helmet());
 app.use(cors({
@@ -42,30 +51,29 @@ setInterval(() => {
 
 // API Routes
 
-// Root health check for Railway
+// Multiple health check endpoints for Railway
 app.get('/', (req, res) => {
-    res.json({
+    res.status(200).json({
         status: 'OK',
         message: 'Career Evaluation System is running',
-        timestamp: new Date().toISOString(),
-        health: '/api/health'
+        timestamp: new Date().toISOString()
     });
 });
 
-// Health check - simplified for Railway deployment
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
 app.get('/api/health', (req, res) => {
-    res.setHeader('X-Health-Check', 'true');
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    
-    res.status(200).json({ 
-        status: 'OK', 
-        timestamp: new Date().toISOString(),
-        message: 'Career Evaluation System API is running',
-        environment: process.env.NODE_ENV || 'development',
-        port: port,
-        uptime: process.uptime(),
-        version: '1.0.0'
-    });
+    res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
+});
+
+app.get('/ping', (req, res) => {
+    res.status(200).send('pong');
+});
+
+app.get('/status', (req, res) => {
+    res.status(200).json({ status: 'OK' });
 });
 
 // Detailed health check with database - for manual testing
@@ -398,34 +406,33 @@ async function startServer() {
     try {
         console.log('🔄 Initializing database...');
         
-        // Log environment details
-        console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
-        console.log(`📋 Port: ${port}`);
-        console.log(`🗃️  Database path: ${process.env.DATABASE_URL || 'database/career-evaluation.db'}`);
-        
-        // Test database connection with timeout
-        const dbTest = await Promise.race([
-            db.all('SELECT 1'),
-            new Promise((_, reject) => setTimeout(() => reject(new Error('Database connection timeout')), 10000))
-        ]);
-        
-        console.log('✅ Database connection successful');
-        
-        // Check Google OAuth configuration
+        // Check Google OAuth configuration first
         if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
             console.log('🔐 Google OAuth enabled');
         } else {
             console.log('⚠️  Google OAuth not configured (missing GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET)');
         }
         
-        // Start server with better error handling
+        // Try to initialize database, but don't fail if it doesn't work immediately
+        try {
+            await Promise.race([
+                db.all('SELECT 1'),
+                new Promise((_, reject) => setTimeout(() => reject(new Error('Database connection timeout')), 5000))
+            ]);
+            console.log('✅ Database connection successful');
+        } catch (dbError) {
+            console.log('⚠️  Database connection failed, will retry later:', dbError.message);
+            // Don't fail startup - continue without database for now
+        }
+        
+        // Start server immediately
         const server = app.listen(port, '0.0.0.0', () => {
             console.log(`🚀 Server running at http://0.0.0.0:${port}`);
             console.log(`📊 API available at http://0.0.0.0:${port}/api/*`);
             console.log(`🔐 Authentication enabled`);
             console.log(`📋 Role-based access control active`);
             console.log(`💾 Database: SQLite ready`);
-            console.log(`✅ Server startup complete`);
+            console.log(`✅ Server startup complete - ready for requests`);
         });
         
         // Handle server errors
@@ -445,6 +452,8 @@ async function startServer() {
                 process.exit(0);
             });
         });
+        
+        return server;
         
     } catch (error) {
         console.error('❌ Failed to start server:', error);
@@ -469,6 +478,8 @@ process.on('uncaughtException', (error) => {
 });
 
 // Start the server
-startServer();
+if (require.main === module) {
+    startServer();
+}
 
 module.exports = app; 

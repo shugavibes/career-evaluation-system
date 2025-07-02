@@ -16,4 +16,4 @@ cmds = [
 ]
 
 [start]
-cmd = "npm start" 
+cmd = "node server-db.js" 
