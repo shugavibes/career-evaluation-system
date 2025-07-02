@@ -1,0 +1,35 @@
+# Vercel ignore file - prevent deployment issues
+
+# Node modules (will be reinstalled fresh)
+frontend/node_modules
+node_modules
+
+# Package locks (will be regenerated)
+frontend/package-lock.json
+
+# Cache directories
+frontend/.cache
+frontend/build/.cache
+
+# SQLite database (not needed for Supabase deployment)
+database/career-evaluation.db
+database/evaluations-backup-*.json
+
+# Development files
+.env
+.env.local
+.env.development
+.env.test
+
+# Logs
+*.log
+npm-debug.log*
+
+# Build cache
+.next
+.nuxt
+.cache
+
+# Temporary files
+.tmp
+.temp 
