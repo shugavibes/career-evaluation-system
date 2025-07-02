@@ -5,22 +5,28 @@
 NODE_ENV=development
 PORT=3001
 
-# Database
-DATABASE_URL=./database/career_evaluation.db
+# === DATABASE CONFIGURATION ===
+# Choose ONE of the following database options:
 
-# JWT Configuration
+# Option 1: SUPABASE (RECOMMENDED for production)
+# Get these from your Supabase project: https://app.supabase.com/
+SUPABASE_URL=https://your-project-ref.supabase.co
+SUPABASE_ANON_KEY=your-supabase-anon-key
+
+# Option 2: SQLite (for local development only)
+# DATABASE_URL=./database/career_evaluation.db
+
+# Authentication
 JWT_SECRET=your-super-secret-jwt-key-change-in-production
-
-# Session Configuration (required for OAuth)
 SESSION_SECRET=your-session-secret-change-in-production
 
-# Google OAuth Configuration
+# Google OAuth Configuration (Optional)
 # Get these from Google Cloud Console: https://console.cloud.google.com/
 GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
 GOOGLE_CALLBACK_URL=http://localhost:3001/auth/google/callback
 
-# Frontend URL (for CORS)
+# Frontend URL (for CORS and OAuth redirects)
 FRONTEND_URL=http://localhost:3000
 
 # React App Environment Variables (for frontend)
@@ -28,10 +34,29 @@ FRONTEND_URL=http://localhost:3000
 REACT_APP_GOOGLE_CLIENT_ID=your-google-client-id
 REACT_APP_API_URL=http://localhost:3001
 
-# ==== PRODUCTION DEPLOYMENT (Railway) ====
+# ==== SUPABASE + VERCEL DEPLOYMENT (RECOMMENDED) ====
+# Set these environment variables in your Vercel project:
+#
+# NODE_ENV=production
+# SUPABASE_URL=https://your-project-ref.supabase.co
+# SUPABASE_ANON_KEY=eyJhbGci...your-actual-anon-key
+# JWT_SECRET=<generate: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))">
+# SESSION_SECRET=<generate: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))">
+# GOOGLE_CLIENT_ID=<from Google Cloud Console>
+# GOOGLE_CLIENT_SECRET=<from Google Cloud Console>
+# FRONTEND_URL=https://your-app.vercel.app
+#
+# Notes:
+# - PORT is automatically set by Vercel
+# - Set up your Supabase database using database/supabase-schema.sql
+# - Google callback URL in production: https://your-app.vercel.app/auth/google/callback
+
+# ==== RAILWAY DEPLOYMENT (ALTERNATIVE) ====
 # Set these environment variables in your Railway project:
 #
 # NODE_ENV=production
+# SUPABASE_URL=https://your-project-ref.supabase.co
+# SUPABASE_ANON_KEY=eyJhbGci...your-actual-anon-key
 # JWT_SECRET=<generate: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))">
 # SESSION_SECRET=<generate: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))">
 # GOOGLE_CLIENT_ID=<from Google Cloud Console>
@@ -40,5 +65,9 @@ REACT_APP_API_URL=http://localhost:3001
 #
 # Notes:
 # - PORT is automatically set by Railway
-# - DATABASE_URL defaults to ./database/career_evaluation.db
-# - Google callback URL in production: https://your-app-name.railway.app/auth/google/callback 
+# - Google callback URL in production: https://your-app-name.railway.app/auth/google/callback
+
+# ==== PRODUCTION SECRETS ====
+# Use these pre-generated secrets for quick setup:
+# SESSION_SECRET=6a219a1996851292921587c759568aca1040d7544f2db765d5227db20b0a325f
+# JWT_SECRET=25ac91c107316d758036d007577972a786befa16206c9de9ffc06779bba7cd1b 

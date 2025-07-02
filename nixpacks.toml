@@ -16,4 +16,4 @@ cmds = [
 ]
 
 [start]
-cmd = "node server-db.js" 
+cmd = "node server-supabase.js" 

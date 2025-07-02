@@ -8,16 +8,19 @@
     "npm": ">=9.0.0"
   },
   "scripts": {
-    "dev": "concurrently \"node server-db.js\" \"cd frontend && npm start\"",
+    "dev": "concurrently \"node server-supabase.js\" \"cd frontend && npm start\"",
+    "dev-sqlite": "concurrently \"node server-db.js\" \"cd frontend && npm start\"",
     "dev-old": "concurrently \"node server.js\" \"cd frontend && npm start\"",
     "build": "./build.sh",
-    "start": "node server-db.js",
+    "start": "node server-supabase.js",
+    "start-sqlite": "node server-db.js",
     "init-db": "node scripts/init-database.js",
     "db:validate": "node scripts/validate-database.js",
     "db:monitor": "node scripts/production-monitor.js",
     "db:cleanup": "node scripts/cleanup-duplicates.js",
     "db:query": "sqlite3 database/career-evaluation.db",
     "verify": "node scripts/verify-startup.js",
+    "deploy:supabase": "npm run build && echo 'Deploy to Supabase Edge Functions or Vercel'",
     "deploy:railway": "railway deploy",
     "deploy:docker": "docker build -t career-evaluation . && docker run -p 3001:3001 career-evaluation",
     "generate:secrets": "node -e \"console.log('SESSION_SECRET=' + require('crypto').randomBytes(32).toString('hex')); console.log('JWT_SECRET=' + require('crypto').randomBytes(32).toString('hex'));\""
@@ -41,6 +44,7 @@
   "author": "Career Evaluation Team",
   "license": "MIT",
   "dependencies": {
+    "@supabase/supabase-js": "^2.50.2",
     "bcryptjs": "^2.4.3",
     "concurrently": "^7.6.0",
     "cookie-parser": "^1.4.6",
