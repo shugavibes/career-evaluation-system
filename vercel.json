@@ -18,10 +18,6 @@
       "dest": "server-supabase.js"
     },
     {
-      "src": "/auth/(.*)",
-      "dest": "server-supabase.js"
-    },
-    {
       "src": "/(health|ping|status)",
       "dest": "server-supabase.js"
     },
