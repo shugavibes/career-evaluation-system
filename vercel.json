@@ -4,6 +4,7 @@
   "buildCommand": "npm run vercel-build",
   "outputDirectory": "frontend/build",
   "installCommand": "npm install && cd frontend && npm install",
+  "framework": "create-react-app",
   "env": {
     "NODE_ENV": "production",
     "SUPABASE_URL": "@supabase_url",
@@ -15,15 +16,11 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "server-supabase.js"
+      "destination": "/api/server.js"
     },
     {
       "source": "/(health|ping|status)",
-      "destination": "server-supabase.js"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "destination": "/api/server.js"
     }
   ],
   "headers": [

@@ -2,7 +2,7 @@
   "name": "career-evaluation-system",
   "version": "1.0.0",
   "description": "Career Evaluation System for Software Engineering Teams",
-  "main": "server-db.js",
+  "main": "server-supabase.js",
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=9.0.0"
@@ -12,7 +12,7 @@
     "dev-sqlite": "concurrently \"node server-db.js\" \"cd frontend && npm start\"",
     "dev-old": "concurrently \"node server.js\" \"cd frontend && npm start\"",
     "build": "./build.sh",
-    "vercel-build": "cd frontend && npm run build",
+    "vercel-build": "cd frontend && npm install && npm run build",
     "start": "node server-supabase.js",
     "start-sqlite": "node server-db.js",
     "init-db": "node scripts/init-database.js",
