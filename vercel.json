@@ -4,25 +4,33 @@
   "buildCommand": "npm run vercel-build",
   "outputDirectory": "frontend/build",
   "installCommand": "npm install && cd frontend && npm install",
+  "env": {
+    "NODE_ENV": "production",
+    "SUPABASE_URL": "@supabase_url",
+    "SUPABASE_ANON_KEY": "@supabase_anon_key",
+    "JWT_SECRET": "@jwt_secret",
+    "SESSION_SECRET": "@session_secret",
+    "FRONTEND_URL": "@frontend_url"
+  },
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/server-supabase.js"
+      "dest": "server-supabase.js"
     },
     {
       "src": "/auth/(.*)",
-      "dest": "/server-supabase.js"
+      "dest": "server-supabase.js"
     },
     {
       "src": "/(health|ping|status)",
-      "dest": "/server-supabase.js"
+      "dest": "server-supabase.js"
     },
     {
       "handle": "filesystem"
     },
     {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "frontend/build/index.html"
     }
   ],
   "headers": [
@@ -30,8 +38,20 @@
       "source": "/(.*)",
       "headers": [
         {
-          "key": "X-Vercel-Authentication",
-          "value": "disabled"
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
         }
       ]
     }

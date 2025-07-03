@@ -245,20 +245,108 @@ Consider PostgreSQL when:
 
 ## 🎯 Alternative Deployment Options
 
-### **Option 2: Vercel (Requires Restructuring)**
-If you prefer Vercel, you'll need to:
-- Convert Express routes to serverless functions
-- Use external database (PostgreSQL/MySQL)
-- Modify session handling
+### **Option 2: Vercel (Recommended)**
+1. **Fork/Clone Repository**
+   ```bash
+   git clone https://github.com/yourusername/career-evaluation-system.git
+   cd career-evaluation-system
+   ```
 
-### **Option 3: Heroku**
-- Similar to Railway but requires more configuration
-- Need to add Procfile
-- Database add-ons required
+2. **Create Supabase Project**
+   - Go to [Supabase](https://app.supabase.com)
+   - Create a new project
+   - Get your project URL and anon key
+   - Run the schema from `database/supabase-schema.sql` in the SQL editor
 
-### **Option 4: Self-Hosted**
-- Use Docker with the included Dockerfile
-- Manage your own server and database
+3. **Set Up Vercel**
+   - Install Vercel CLI: `npm i -g vercel`
+   - Login to Vercel: `vercel login`
+   - Link project: `vercel link`
+
+4. **Set Environment Variables in Vercel**
+   ```bash
+   vercel env add SUPABASE_URL
+   vercel env add SUPABASE_ANON_KEY
+   vercel env add JWT_SECRET
+   vercel env add SESSION_SECRET
+   vercel env add FRONTEND_URL
+   ```
+
+   Generate secrets:
+   ```bash
+   npm run generate:secrets
+   ```
+
+5. **Deploy to Vercel**
+   ```bash
+   vercel --prod
+   ```
+
+6. **Initialize Database**
+   - Go to your Supabase project SQL editor
+   - Run the schema from `database/supabase-schema.sql`
+   - Run the following to initialize users:
+   ```sql
+   -- Insert team members with correct roles
+   INSERT INTO users (name, slug, email, password_hash, role, position) 
+   VALUES 
+   ('Fede Cano', 'fede-cano', 'fedecano@heyatlas.com', '$2a$10$...', 'tech_lead', 'Tech Lead'),
+   ('Alton Bell', 'alton-bell', 'alton@heyatlas.com', '$2a$10$...', 'tech_lead', 'Tech Lead'),
+   ('Nicolas Alvarez', 'nicolas-alvarez', 'shuga@heyatlas.com', '$2a$10$...', 'head_of_product', 'Head of Product'),
+   -- Add other team members...
+   ;
+   ```
+
+7. **Verify Deployment**
+   - Visit your Vercel deployment URL
+   - Try logging in with team member credentials
+   - Check API endpoints are working
+   - Verify database connections
+
+## Environment Variables
+
+Required environment variables in Vercel:
+
+```env
+NODE_ENV=production
+SUPABASE_URL=https://your-project-ref.supabase.co
+SUPABASE_ANON_KEY=your-anon-key
+JWT_SECRET=generated-jwt-secret
+SESSION_SECRET=generated-session-secret
+FRONTEND_URL=https://your-vercel-app.vercel.app
+```
+
+## Troubleshooting
+
+1. **API Connection Issues**
+   - Check CORS settings in `server-supabase.js`
+   - Verify environment variables are set
+   - Check Vercel deployment logs
+
+2. **Database Issues**
+   - Verify Supabase connection string
+   - Check database schema is properly initialized
+   - Run database validation: `npm run db:validate`
+
+3. **Authentication Problems**
+   - Verify JWT_SECRET is properly set
+   - Check user roles in database
+   - Validate login endpoints
+
+## Monitoring
+
+- Use Vercel dashboard for deployment monitoring
+- Check Supabase dashboard for database metrics
+- Run `npm run db:monitor` for database health checks
+
+## Support
+
+For deployment issues:
+1. Check Vercel deployment logs
+2. Verify environment variables
+3. Review API responses in browser console
+4. Check database connectivity
+5. Review CORS settings if API calls fail
 
 ## ✅ Final Deployment Checklist
 
