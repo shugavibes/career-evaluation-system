@@ -28,7 +28,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yourusername/career-evaluation-system.git"
+    "url": "git+https://github.com/shugavibes/career-evaluation-system.git"
   },
   "keywords": [
     "career",
@@ -58,7 +58,6 @@
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "passport": "^0.7.0",
-
     "passport-jwt": "^4.0.1",
     "postcss": "^8.4.32",
     "sqlite3": "^5.1.6",
@@ -68,7 +67,7 @@
     "nodemon": "^2.0.20"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/career-evaluation-system/issues"
+    "url": "https://github.com/shugavibes/career-evaluation-system/issues"
   },
-  "homepage": "https://github.com/yourusername/career-evaluation-system#readme"
+  "homepage": "https://github.com/shugavibes/career-evaluation-system#readme"
 }
