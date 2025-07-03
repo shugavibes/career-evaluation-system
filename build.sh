@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Starting Career Evaluation System build process..."
+echo "🚀 Starting Career Evaluation System build process... ($(date -u '+%Y-%m-%d %H:%M:%S UTC'))"
 
 # Check for required commands
 command -v node >/dev/null 2>&1 || { echo "❌ Node.js is required but not installed. Aborting." >&2; exit 1; }
