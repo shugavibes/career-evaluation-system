@@ -12,21 +12,18 @@
     "SESSION_SECRET": "@session_secret",
     "FRONTEND_URL": "@frontend_url"
   },
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "server-supabase.js"
+      "source": "/api/:path*",
+      "destination": "server-supabase.js"
     },
     {
-      "src": "/(health|ping|status)",
-      "dest": "server-supabase.js"
+      "source": "/(health|ping|status)",
+      "destination": "server-supabase.js"
     },
     {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "frontend/build/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ],
   "headers": [
