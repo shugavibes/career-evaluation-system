@@ -8,8 +8,8 @@ const JWT_EXPIRES_IN = '7d';
 
 // Rate limiting for login attempts
 const loginLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 5, // Limit each IP to 5 requests per windowMs
+    windowMs: process.env.NODE_ENV === 'production' ? 15 * 60 * 1000 : 1 * 60 * 1000, // 15 minutes in production, 1 minute in dev
+    max: process.env.NODE_ENV === 'production' ? 5 : 50, // 5 in production, 50 in development
     message: { error: 'Too many login attempts, please try again later.' },
     standardHeaders: true,
     legacyHeaders: false,
