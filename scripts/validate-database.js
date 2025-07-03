@@ -38,7 +38,7 @@ async function validateDatabase() {
         
         // Check OAuth readiness
         const oauthColumns = await query("PRAGMA table_info(users)");
-        const hasOAuth = oauthColumns.some(col => col.name === 'google_id');
+        const hasOAuth = false; // Google OAuth removed
         log(hasOAuth ? 'green' : 'yellow', `${hasOAuth ? '✅' : '⚠️ '} OAuth Integration: ${hasOAuth ? 'Ready' : 'Not configured'}`);
         
         // List all users
@@ -168,7 +168,7 @@ async function validateDatabase() {
         
         const checks = [
             { name: 'Database Schema', status: true, message: 'All tables present' },
-            { name: 'OAuth Columns', status: hasOAuth, message: hasOAuth ? 'Ready for Google OAuth' : 'Need OAuth migration' },
+            { name: 'OAuth Columns', status: true, message: 'Google OAuth removed - using email/password only' },
             { name: 'Manager Account', status: managers.length > 0, message: `${managers.length} manager(s) configured` },
             { name: 'Team Members', status: teamMembers.length > 0, message: `${teamMembers.length} team member(s)` },
             { name: 'Sample Data', status: evaluations.filter(e => e.evaluator_type).length > 0, message: 'Evaluations exist' }

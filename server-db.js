@@ -137,37 +137,7 @@ app.post('/api/auth/logout', auth.logout);
 app.get('/api/auth/me', auth.authenticate, auth.getCurrentUser);
 app.post('/api/auth/change-password', auth.authenticate, auth.changePassword);
 
-// Google OAuth routes (only if OAuth is configured)
-if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
-    app.get('/auth/google', passport.authenticate('google', {
-        scope: ['profile', 'email']
-    }));
-
-    app.get('/auth/google/callback', 
-        passport.authenticate('google', { failureRedirect: '/login?error=oauth_failed' }),
-        async (req, res) => {
-            try {
-                // Generate JWT token for the user
-                const token = auth.generateToken(req.user);
-                
-                // Redirect to frontend with token
-                res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth/callback?token=${token}`);
-            } catch (error) {
-                console.error('OAuth callback error:', error);
-                res.redirect('/login?error=oauth_callback_failed');
-            }
-        }
-    );
-} else {
-    // Provide fallback routes when OAuth is not configured
-    app.get('/auth/google', (req, res) => {
-        res.status(501).json({ error: 'Google OAuth not configured' });
-    });
-    
-    app.get('/auth/google/callback', (req, res) => {
-        res.status(501).json({ error: 'Google OAuth not configured' });
-    });
-}
+// Google OAuth removed - using email/password authentication only
 
 // Users API with role-based access
 app.get('/api/users', auth.authenticate, auth.requireTeamMemberOrManager, async (req, res) => {
@@ -406,12 +376,7 @@ async function startServer() {
     try {
         console.log('🔄 Initializing database...');
         
-        // Check Google OAuth configuration first
-        if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
-            console.log('🔐 Google OAuth enabled');
-        } else {
-            console.log('⚠️  Google OAuth not configured (missing GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET)');
-        }
+        // Authentication: Email/Password only (Google OAuth removed)
         
         // Try to initialize database, but don't fail if it doesn't work immediately
         try {

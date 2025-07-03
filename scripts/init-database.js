@@ -223,45 +223,9 @@ db.serialize(() => {
                 }
             });
         } else {
-            // Check if we need to migrate to OAuth schema
-            db.all("PRAGMA table_info(users)", (err, columns) => {
-                if (err) {
-                    console.error('Error checking table schema:', err.message);
-                    return;
-                }
-
-                const hasGoogleId = columns.some(col => col.name === 'google_id');
-                
-                if (!hasGoogleId) {
-                    console.log('🔄 Migrating database schema for Google OAuth...');
-                    
-                    // Add OAuth columns
-                    db.run("ALTER TABLE users ADD COLUMN google_id TEXT", (err) => {
-                        if (err && !err.message.includes('duplicate column')) {
-                            console.error('Error adding google_id column:', err.message);
-                        }
-                    });
-                    
-                    db.run("ALTER TABLE users ADD COLUMN avatar_url TEXT", (err) => {
-                        if (err && !err.message.includes('duplicate column')) {
-                            console.error('Error adding avatar_url column:', err.message);
-                        }
-                    });
-                    
-                    db.run("ALTER TABLE users ADD COLUMN auth_provider TEXT DEFAULT 'local'", (err) => {
-                        if (err && !err.message.includes('duplicate column')) {
-                            console.error('Error adding auth_provider column:', err.message);
-                        }
-                    });
-                    
-                    console.log('✅ Schema migration completed');
-                } else {
-                    console.log('✅ Database schema is up to date');
-                }
-                
-                // Start seeding after schema check/migration
-                setTimeout(seedUsers, 100);
-            });
+            // Proceed with seeding users (Google OAuth columns removed)
+            console.log('✅ Database schema is up to date');
+            setTimeout(seedUsers, 100);
         }
     });
 }); 

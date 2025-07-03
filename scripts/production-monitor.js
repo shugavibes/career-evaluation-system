@@ -145,20 +145,16 @@ async function monitorProduction() {
         log('blue', `👤 Self-Evaluation Coverage: ${selfEvalCoverage}% (${usersWithSelfEvals[0].count}/${teamMembers[0].count})`);
         log('blue', `👨‍💼 Manager Evaluation Coverage: ${managerEvalCoverage}% (${usersWithManagerEvals[0].count}/${teamMembers[0].count})`);
         
-        // OAuth Status
+        // Authentication Status
         log('cyan', '\n🔐 AUTHENTICATION STATUS');
         console.log('-'.repeat(30));
         
-        const oauthUsers = await query(`
-            SELECT COUNT(*) as count FROM users WHERE auth_provider = 'google'
-        `);
-        
         const localUsers = await query(`
-            SELECT COUNT(*) as count FROM users WHERE auth_provider = 'local' OR auth_provider IS NULL
+            SELECT COUNT(*) as count FROM users
         `);
         
-        log('blue', `🔑 Local Auth Users: ${localUsers[0].count}`);
-        log('blue', `🌐 Google OAuth Users: ${oauthUsers[0].count}`);
+        log('blue', `🔑 Email/Password Auth Users: ${localUsers[0].count}`);
+        log('blue', `🌐 Google OAuth: Disabled`);
         
         // Alert Conditions
         log('cyan', '\n⚠️  ALERTS');

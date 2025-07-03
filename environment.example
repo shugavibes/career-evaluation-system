@@ -16,22 +16,15 @@ SUPABASE_ANON_KEY=your-supabase-anon-key
 # Option 2: SQLite (for local development only)
 # DATABASE_URL=./database/career_evaluation.db
 
-# Authentication
+# Authentication (Email/Password Only)
 JWT_SECRET=your-super-secret-jwt-key-change-in-production
 SESSION_SECRET=your-session-secret-change-in-production
 
-# Google OAuth Configuration (Optional)
-# Get these from Google Cloud Console: https://console.cloud.google.com/
-GOOGLE_CLIENT_ID=your-google-client-id
-GOOGLE_CLIENT_SECRET=your-google-client-secret
-GOOGLE_CALLBACK_URL=http://localhost:3001/auth/google/callback
-
-# Frontend URL (for CORS and OAuth redirects)
+# Frontend URL (for CORS)
 FRONTEND_URL=http://localhost:3000
 
 # React App Environment Variables (for frontend)
 # Note: These must be prefixed with REACT_APP_ to be accessible in React
-REACT_APP_GOOGLE_CLIENT_ID=your-google-client-id
 REACT_APP_API_URL=http://localhost:3001
 
 # ==== SUPABASE + VERCEL DEPLOYMENT (RECOMMENDED) ====
@@ -42,14 +35,11 @@ REACT_APP_API_URL=http://localhost:3001
 # SUPABASE_ANON_KEY=eyJhbGci...your-actual-anon-key
 # JWT_SECRET=<generate: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))">
 # SESSION_SECRET=<generate: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))">
-# GOOGLE_CLIENT_ID=<from Google Cloud Console>
-# GOOGLE_CLIENT_SECRET=<from Google Cloud Console>
 # FRONTEND_URL=https://your-app.vercel.app
 #
 # Notes:
 # - PORT is automatically set by Vercel
 # - Set up your Supabase database using database/supabase-schema.sql
-# - Google callback URL in production: https://your-app.vercel.app/auth/google/callback
 
 # ==== RAILWAY DEPLOYMENT (ALTERNATIVE) ====
 # Set these environment variables in your Railway project:
@@ -59,13 +49,10 @@ REACT_APP_API_URL=http://localhost:3001
 # SUPABASE_ANON_KEY=eyJhbGci...your-actual-anon-key
 # JWT_SECRET=<generate: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))">
 # SESSION_SECRET=<generate: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))">
-# GOOGLE_CLIENT_ID=<from Google Cloud Console>
-# GOOGLE_CLIENT_SECRET=<from Google Cloud Console>
 # FRONTEND_URL=https://your-app-name.railway.app
 #
 # Notes:
 # - PORT is automatically set by Railway
-# - Google callback URL in production: https://your-app-name.railway.app/auth/google/callback
 
 # ==== PRODUCTION SECRETS ====
 # Use these pre-generated secrets for quick setup:
