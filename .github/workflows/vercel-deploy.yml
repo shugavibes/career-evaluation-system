@@ -51,6 +51,14 @@ jobs:
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
 
+      - name: Set up Vercel environment variables
+        run: |
+          vercel env add SUPABASE_URL production ${{ secrets.SUPABASE_URL }} --token=${{ secrets.VERCEL_TOKEN }} --yes || true
+          vercel env add SUPABASE_ANON_KEY production ${{ secrets.SUPABASE_ANON_KEY }} --token=${{ secrets.VERCEL_TOKEN }} --yes || true
+          vercel env add JWT_SECRET production ${{ secrets.JWT_SECRET }} --token=${{ secrets.VERCEL_TOKEN }} --yes || true
+          vercel env add SESSION_SECRET production ${{ secrets.SESSION_SECRET }} --token=${{ secrets.VERCEL_TOKEN }} --yes || true
+          vercel env add FRONTEND_URL production ${{ secrets.FRONTEND_URL }} --token=${{ secrets.VERCEL_TOKEN }} --yes || true
+
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
@@ -60,6 +68,11 @@ jobs:
           vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
         env:
           CI: true
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
+          FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
 
       - name: Deploy to Vercel
         id: deploy
