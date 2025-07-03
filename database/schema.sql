@@ -4,11 +4,8 @@ CREATE TABLE users (
     name TEXT NOT NULL,
     slug TEXT UNIQUE NOT NULL,
     email TEXT UNIQUE NOT NULL,
-    password_hash TEXT, -- Nullable for Google OAuth users
-    google_id TEXT UNIQUE, -- Google OAuth ID
-    avatar_url TEXT, -- Profile picture from Google
-    auth_provider TEXT DEFAULT 'local' CHECK (auth_provider IN ('local', 'google')),
-    role TEXT NOT NULL CHECK (role IN ('team_member', 'manager')),
+    password_hash TEXT NOT NULL,
+    role TEXT NOT NULL CHECK (role IN ('team_member', 'manager', 'tech_lead', 'head_of_product')),
     position TEXT NOT NULL, -- Tech Lead, Senior Engineer, etc.
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP

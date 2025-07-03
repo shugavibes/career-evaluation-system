@@ -22,7 +22,10 @@ const seedUsers = async () => {
     console.log('👥 Seeding users...');
     
     // Create managers
-    const managers = [
+    const managers = [];
+
+    // Create team members
+    const teamMembers = [
         {
             name: "Fede Cano",
             slug: "fede-cano",
@@ -42,12 +45,8 @@ const seedUsers = async () => {
             slug: "nicolas-alvarez",
             email: "shuga@heyatlas.com",
             password: "Atlas2024@NA",
-            position: "Engineering Manager"
-        }
-    ];
-
-    // Create team members
-    const teamMembers = [
+            position: "Head of Product"
+        },
         {
             name: "Leo Paini",
             slug: "leo-paini",
@@ -104,10 +103,19 @@ const seedUsers = async () => {
     // Insert team members
     for (const member of teamMembers) {
         const hashedPassword = await bcrypt.hash(member.password, 10);
+        let role = 'team_member';
+        
+        // Assign special roles
+        if (member.name === "Fede Cano" || member.name === "Alton Bell") {
+            role = 'tech_lead';
+        } else if (member.name === "Nicolas Alvarez") {
+            role = 'head_of_product';
+        }
+        
         db.run(`
             INSERT INTO users (name, slug, email, password_hash, role, position) 
             VALUES (?, ?, ?, ?, ?, ?)
-        `, [member.name, member.slug, member.email, hashedPassword, 'team_member', member.position]);
+        `, [member.name, member.slug, member.email, hashedPassword, role, member.position]);
     }
 
     console.log('📋 Seeding expectations...');
@@ -168,12 +176,10 @@ const seedUsers = async () => {
         console.log('');
         console.log('🔐 Atlas Team Credentials:');
         console.log('');
-        console.log('📋 MANAGERS:');
-        console.log('   Fede Cano: fedecano@heyatlas.com / Atlas2024@FC');
-        console.log('   Alton Bell: alton@heyatlas.com / Atlas2024@AB');
-        console.log('   Nicolas Alvarez: shuga@heyatlas.com / Atlas2024@NA');
-        console.log('');
         console.log('👥 TEAM MEMBERS:');
+        console.log('   Fede Cano (Tech Lead): fedecano@heyatlas.com / Atlas2024@FC');
+        console.log('   Alton Bell (Tech Lead): alton@heyatlas.com / Atlas2024@AB');
+        console.log('   Nicolas Alvarez (Head of Product): shuga@heyatlas.com / Atlas2024@NA');
         console.log('   Leo Paini: leo@heyatlas.com / Atlas2024@LP');
         console.log('   Javi Mermet: javier@heyatlas.com / Atlas2024@JM');
         console.log('   Santi Musso: santi@heyatlas.com / Atlas2024@SM');
