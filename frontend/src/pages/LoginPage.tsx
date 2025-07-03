@@ -66,12 +66,7 @@ const LoginPage: React.FC = () => {
         }));
     };
 
-    const fillManagerCredentials = () => {
-        setCredentials({
-            email: 'manager@company.com',
-            password: 'manager123'
-        });
-    };
+
 
     const fillTeamMemberCredentials = () => {
         setCredentials({
@@ -215,14 +210,24 @@ const LoginPage: React.FC = () => {
                                     <div className="flex items-center justify-between">
                                         <div>
                                             <p className="text-sm font-medium text-purple-900">Manager Access</p>
-                                            <p className="text-xs text-purple-700">Full team management</p>
+                                            <p className="text-xs text-purple-700">Production: admin123 | Development: manager123</p>
                                         </div>
-                                        <button
-                                            onClick={fillManagerCredentials}
-                                            className="text-xs bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
-                                        >
-                                            Use
-                                        </button>
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() => setCredentials({ email: 'manager@company.com', password: 'admin123' })}
+                                                className="text-xs bg-purple-600 text-white px-2 py-1 rounded hover:bg-purple-700"
+                                                title="Production credentials"
+                                            >
+                                                Prod
+                                            </button>
+                                            <button
+                                                onClick={() => setCredentials({ email: 'manager@company.com', password: 'manager123' })}
+                                                className="text-xs bg-purple-500 text-white px-2 py-1 rounded hover:bg-purple-600"
+                                                title="Development credentials"
+                                            >
+                                                Dev
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                                 
@@ -230,7 +235,7 @@ const LoginPage: React.FC = () => {
                                     <div className="flex items-center justify-between">
                                         <div>
                                             <p className="text-sm font-medium text-blue-900">Team Member Access</p>
-                                            <p className="text-xs text-blue-700">Personal dashboard only</p>
+                                            <p className="text-xs text-blue-700">Same password for both environments</p>
                                         </div>
                                         <button
                                             onClick={fillTeamMemberCredentials}
