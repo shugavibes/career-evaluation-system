@@ -61,74 +61,82 @@ CREATE INDEX IF NOT EXISTS idx_sessions_expires_at ON sessions(expires_at);
 
 -- Insert initial data
 
--- Insert system manager
-INSERT INTO users (name, slug, email, password_hash, role, position) 
-VALUES (
-    'System Manager',
-    'system-manager',
-    'manager@company.com',
-    '$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW', -- password: admin123
+-- Insert managers
+INSERT INTO users (name, slug, email, password_hash, role, position) VALUES 
+(
+    'Fede Cano',
+    'fede-cano',
+    'fedecano@heyatlas.com',
+    '$2a$10$RSJ3GFwKdpM0y059bHrQje.Kkfk0EfkHtfC8vWd6p5osyBlICOLzS', -- password: Atlas2024@FC
     'manager',
-    'System Manager'
+    'Tech Lead'
+),
+(
+    'Alton Bell',
+    'alton-bell',
+    'alton@heyatlas.com',
+    '$2a$10$4qKgoxSOlQ0W/mxWYSVD7.h7CvWFRGxPLklp/CRHMkXO8S3gtiPgq', -- password: Atlas2024@AB
+    'manager',
+    'Tech Lead'
+),
+(
+    'Nicolas Alvarez',
+    'nicolas-alvarez',
+    'shuga@heyatlas.com',
+    '$2a$10$eUxK82Vn6oqBhdG2CTvx5.C7txU3M0U65qc.VkZs6IGfCtw28wkW6', -- password: Atlas2024@NA
+    'manager',
+    'Engineering Manager'
 ) ON CONFLICT (email) DO NOTHING;
 
 -- Insert team members
 INSERT INTO users (name, slug, email, password_hash, role, position) VALUES 
 (
-    'Fede Miranda',
-    'fede-miranda',
-    'fede.miranda@company.com',
-    '$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW', -- password: password123
+    'Leo Paini',
+    'leo-paini',
+    'leo@heyatlas.com',
+    '$2a$10$6TX79Bet6mUDvZnjwkO4OOszTJIwzdUIu.idxOww/xf3bzifL3rkm', -- password: Atlas2024@LP
     'team_member',
-    'Semi-Senior Engineer'
+    'Senior Engineer'
 ),
 (
-    'Jose Biskis',
-    'jose-biskis',
-    'jose.biskis@company.com',
-    '$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW',
+    'Javi Mermet',
+    'javi-mermet',
+    'javier@heyatlas.com',
+    '$2a$10$AHy/Au7N7DCcrPwpNhIDf.CO1jh26o0QnKjDAhu9PLiMBkIHNuGvW', -- password: Atlas2024@JM
     'team_member',
     'Senior Engineer'
 ),
 (
     'Santi Musso',
     'santi-musso',
-    'santi.musso@company.com',
-    '$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW',
+    'santi@heyatlas.com',
+    '$2a$10$tNkW/AeL9yZG1Us9/SaTtudoEPrpyTswphRBa6U5vGrmJI0jshPZe', -- password: Atlas2024@SM
     'team_member',
     'Junior Engineer'
 ),
 (
-    'Alton Bell',
-    'alton-bell',
-    'alton.bell@company.com',
-    '$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW',
+    'Fede Miranda',
+    'fede-miranda',
+    'fede@heyatlas.com',
+    '$2a$10$X0Jjv/Wi1sicydL.dkO48.xS./NOLWT1t.z3hk39PmfwrLhTBMPlm', -- password: Atlas2024@FM
     'team_member',
-    'Tech Lead'
+    'Semi-Senior Engineer'
 ),
 (
-    'Javi Mermet',
-    'javi-mermet',
-    'javi.mermet@company.com',
-    '$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW',
+    'Jose Biskis',
+    'jose-biskis',
+    'josebiskis@heyatlas.com',
+    '$2a$10$tRMHCP9XXEk2V3MuMymlMemVX2JigH0M8bhVfAQmJm1ypkus/1Lda', -- password: Atlas2024@JB
     'team_member',
     'Senior Engineer'
 ),
 (
-    'Leo Paini',
-    'leo-paini',
-    'leo.paini@company.com',
-    '$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW',
+    'Ale Schon',
+    'ale-schon',
+    'alejo@heyatlas.com',
+    '$2a$10$mR42T2SKHCsxfmLSCxPR8.3WPnTWLbT77vL0mpaLLUUFSBdJoygmK', -- password: Atlas2024@AS
     'team_member',
     'Senior Engineer'
-),
-(
-    'Fede Cano',
-    'fede-cano',
-    'fede.cano@company.com',
-    '$2a$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW',
-    'team_member',
-    'Tech Lead'
 ) ON CONFLICT (email) DO NOTHING;
 
 -- Insert sample expectations for Fede Miranda and Jose Biskis
