@@ -33,9 +33,23 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// API Routes
+// Basic health check that doesn't require auth
 app.get('/api/health', (req, res) => {
-    res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
+    res.status(200).json({ 
+        status: 'OK', 
+        timestamp: new Date().toISOString(),
+        environment: process.env.NODE_ENV
+    });
+});
+
+// Status endpoint for deployment verification
+app.get('/status', (req, res) => {
+    res.status(200).json({ status: 'OK' });
+});
+
+// Ping endpoint for basic connectivity check
+app.get('/ping', (req, res) => {
+    res.status(200).send('pong');
 });
 
 // Authentication routes
